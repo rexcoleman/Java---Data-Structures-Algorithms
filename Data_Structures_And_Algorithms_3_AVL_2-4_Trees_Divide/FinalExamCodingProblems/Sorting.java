@@ -9,93 +9,7 @@ import java.util.Queue;
 
 public class Sorting {
 
-    /**
-     * Implement merge sort.
-     *
-     * It should be:
-     * out-of-place
-     * stable
-     * not adaptive
-     *
-     * Have a worst case running time of: O(n log n)
-     * And a best case running time of: O(n log n)
-     *
-     * You can create more arrays to run merge sort, but at the end, everything
-     * should be merged back into the original T[] which was passed in.
-     *
-     * When splitting the array, if there is an odd number of elements, put the
-     * extra data on the right side.
-     *
-     * Hint: You may need to create a helper method that merges two arrays
-     * back into the original T[] array. If two data are equal when merging,
-     * think about which subarray you should pull from first.
-     *
-     * You may assume that the passed in array and comparator are both valid
-     * and will not be null.
-     *
-     * @param <T>        Data type to sort.
-     * @param arr        The array to be sorted.
-     * @param comparator The Comparator used to compare the data in arr.
-     */
-    public static <T> void mergeSort(T[] arr, Comparator<T> comparator) {
-        // WRITE YOUR CODE HERE (DO NOT MODIFY METHOD HEADER)!
-        if (arr == null || arr.length <= 1) {
-            return;
-        }
-        
-        // Calculate midpoint
-        int midIndex = arr.length / 2;
-        
-        // Create left and right arrays
-        T[] left = (T[]) new Object[midIndex];
-        T[] right = (T[]) new Object[arr.length - midIndex];
-        
-        // Fill left array
-        for (int i = 0; i < midIndex; i++) {
-            left[i] = arr[i];
-        }
-        
-        // Fill right array
-        for (int i = midIndex; i < arr.length; i++) {
-            right[i - midIndex] = arr[i];
-        }
-        
-        // Recursive calls
-        mergeSort(left, comparator);
-        mergeSort(right, comparator);
-        
-        // Merge step
-        int i = 0;  // left array index
-        int j = 0;  // right array index
-        int k = 0;  // main array index
-        
-        while (i < left.length && j < right.length) {
-            if (comparator.compare(left[i], right[j]) <= 0) {
-                arr[k] = left[i];
-                i++;
-            } else {
-                arr[k] = right[j];
-                j++;
-            }
-            k++;
-        }
-    
-        // Copy remaining elements of left array
-        while (i < left.length) {
-            arr[k] = left[i];
-            i++;
-            k++;
-        }
-        
-        // Copy remaining elements of right array
-        while (j < right.length) {
-            arr[k] = right[j];
-            j++;
-            k++;
-        }
-    }
-    
-    
+
 
     /**
      * Implement LSD (least significant digit) radix sort.
@@ -178,6 +92,101 @@ public class Sorting {
 
             // Move to next digit
             exp *= 10;
+        }
+    }
+
+    /* Implement bubble sort.
+    *
+    * It should be:
+    * in-place
+    * stable
+    * adaptive
+    *
+    * Have a worst case running time of: O(n^2)
+    * And a best case running time of: O(n)
+    *
+    * NOTE: You should implement bubble sort with the last swap optimization.
+    *
+    * You may assume that the passed in array and comparator
+    * are both valid and will never be null.
+    *
+    * @param <T>        Data type to sort.
+    * @param arr        The array that must be sorted after the method runs.
+    * @param comparator The Comparator used to compare the data in arr.
+    */
+   public static <T> void bubbleSort(T[] arr, Comparator<T> comparator) {
+       // WRITE YOUR CODE HERE (DO NOT MODIFY METHOD HEADER)!
+       if (arr.length <= 1) {
+        return;
+        }
+        
+        // Keep track of the last index where a swap occurred
+        int lastSwapped = arr.length - 1;
+        
+        // Continue until no swaps are needed (array is sorted)
+        boolean swapped = true;
+        while (swapped) {
+            swapped = false;
+            int newLastSwapped = 0;
+            
+            // Only need to check up to the last swapped position
+            // since elements after that are already in order
+            for (int i = 0; i < lastSwapped; i++) {
+                if (comparator.compare(arr[i], arr[i + 1]) > 0) {
+                    // Swap elements
+                    T temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                    swapped = true;
+                    newLastSwapped = i;
+                }
+            }
+            // Update the last swapped position
+            lastSwapped = newLastSwapped;
+        }
+    }
+
+    public static <T> void selectionSort(T[] arr, Comparator<T> comparator) {
+        if (arr.length <= 1) {
+            return;
+        }
+
+        for (int i = 0; i < arr.length - 1; i++) {
+            // Find index of minimum element in unsorted portion
+            int minIndex = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (comparator.compare(arr[j], arr[minIndex]) < 0) {
+                    minIndex = j;
+                }
+            }
+
+            // Swap with first element of unsorted portion if needed
+            if (midIndex != i) {
+                T temp = arr[i];
+                arr[i] = arr[midIndex];
+                arr[minIndex] = temp;
+            }
+        }
+    }
+
+
+    public static <T> void insertionSort(T[] arr, Comparator<T> comparator) {
+        if (arr.length <= 1) {
+            return;
+        }
+        
+        for (int i = 1; i < arr.length; i++) {
+            T current = arr[i];
+            int j = i - 1;
+            
+            // Shift elements right until we find current's correct position
+            while (j >= 0 && comparator.compare(arr[j], current) > 0) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            
+            // Place current in its correct position
+            arr[j + 1] = current;
         }
     }
 }
